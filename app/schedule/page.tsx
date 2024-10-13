@@ -22,6 +22,7 @@ interface Appointment {
 	patient_name: string;
 	date: string;
 	time: string;
+	patients: { name: string };
 }
 
 export default function SchedulePage() {
@@ -54,10 +55,11 @@ export default function SchedulePage() {
 		if (error) {
 			console.error('Error fetching appointments:', error);
 		} else {
+			console.log('Fetched appointments:', data);
 			setAppointments(
 				data?.map((app) => ({
 					...app,
-					patient_name: app.patients.name,
+					patient_name: app.patients.name || 'Unknown',
 				})) || []
 			);
 		}
