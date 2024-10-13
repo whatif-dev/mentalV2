@@ -9,12 +9,22 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { supabase } from '@/lib/supabase'
 import { usePatient } from '@/contexts/PatientContext'
 
+interface Prescription {
+  id: string
+  patient_id: string
+  medication: string
+  dosage: string
+  frequency: string
+  status: 'active' | 'discontinued'
+}
+
+
 export default function RxPage() {
   const { selectedPatient } = usePatient()
   const [medication, setMedication] = useState('')
   const [dosage, setDosage] = useState('')
   const [frequency, setFrequency] = useState('')
-  const [prescriptions, setPrescriptions] = useState([])
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
 
   useEffect(() => {
     if (selectedPatient) {
