@@ -40,13 +40,17 @@ export default function RxPage() {
     
     if (error) {
       console.error('Error fetching prescriptions:', error)
+      alert('Failed to fetch prescriptions. Please try again.')
     } else {
       setPrescriptions(data || [])
     }
   }
 
   const handleAddPrescription = async () => {
-    if (!selectedPatient) return
+    if (!selectedPatient) {
+      alert('Please select a patient before adding a prescription.')
+      return
+    }
 
     const { data, error } = await supabase
       .from('prescriptions')
@@ -54,6 +58,7 @@ export default function RxPage() {
     
     if (error) {
       console.error('Error adding prescription:', error)
+      alert('Failed to add prescription. Please try again.')
     } else {
       console.log('Prescription added successfully:', data)
       setMedication('')
@@ -64,6 +69,11 @@ export default function RxPage() {
   }
 
   const handleDiscontinuePrescription = async (id: string) => {
+    if (!selectedPatient) {
+      alert('No patient selected. Please select a patient and try again.')
+      return
+    }
+
     const { data, error } = await supabase
       .from('prescriptions')
       .update({ status: 'discontinued' })
@@ -71,6 +81,7 @@ export default function RxPage() {
     
     if (error) {
       console.error('Error discontinuing prescription:', error)
+      alert('Failed to discontinue prescription. Please try again.')
     } else {
       console.log('Prescription discontinued successfully:', data)
       fetchPrescriptions(selectedPatient.id)
