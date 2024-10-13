@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Calendar, FileText, PlusCircle, UserPlus, Clock } from 'lucide-react';
+import { Calendar, FileText, PlusCircle, UserPlus, Clock, Home } from 'lucide-react';
 import PatientSelection from '@/components/PatientSelection';
 import { usePatient } from '@/contexts/PatientContext';
 import AddPatientModal from '@/components/AddPatientModal';
@@ -17,8 +17,8 @@ const Navigation = () => {
 	const [patientSelectionKey, setPatientSelectionKey] = useState(0);
 
 	const links = [
-		{ href: '/schedule', label: 'Schedule', icon: Clock },
-		{ href: '/billing', label: 'Billing & Appointments', icon: FileText },
+		{ href: '/schedule', label: 'Appointments', icon: Clock },
+		{ href: '/billing', label: 'Ledger', icon: FileText },
 		{ href: '/rx', label: 'Rx', icon: PlusCircle },
 	];
 
@@ -29,7 +29,12 @@ const Navigation = () => {
 
 	return (
 		<nav className="flex flex-col w-64 bg-gray-100 p-4">
-			<h1 className="text-2xl font-bold mb-8">Mental Health Billing</h1>
+			<Link href="/">
+				<Button variant="ghost" className="w-full justify-start mb-8">
+					<Home className="mr-2 h-6 w-6" />
+					Home
+				</Button>
+			</Link>
 			<div className="mb-4">
 				<PatientSelection key={patientSelectionKey} />
 			</div>
