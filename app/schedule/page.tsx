@@ -11,11 +11,14 @@ import { supabase } from '@/lib/supabase'
 import { Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface Appointment {
-  id: string;
-  patient_id: string;
-  patient_name: string;
-  date: string;
-  time: string;
+	id: string;
+	patient_id: string;
+	date: string;
+	time: string;
+	patients: {
+	  name: string;
+	}[];
+	patient_name?: string;
 }
 
 export default function SchedulePage() {
@@ -45,10 +48,10 @@ export default function SchedulePage() {
     if (error) {
       console.error('Error fetching appointments:', error)
     } else {
-      setAppointments(data?.map(app => ({
+      setAppointments((data as Appointment[] || []).map(app => ({
         ...app,
-        patient_name: app.patients.name
-      })) || [])
+        patient_name: app.patients[0]?.name || 'Unknown'
+      })))
     }
   }
 
