@@ -18,7 +18,7 @@ const Navigation = () => {
 
 	const links = [
 		{ href: '/schedule', label: 'Appointments', icon: Clock },
-		{ href: '/billing', label: 'Ledger', icon: FileText },
+		{ href: '/patients', label: 'Patients', icon: FileText },
 		{ href: '/rx', label: 'Rx', icon: PlusCircle },
 	];
 
