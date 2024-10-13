@@ -19,9 +19,9 @@ import { Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 interface Appointment {
 	id: string;
 	patient_id: string;
-	patient_name: string;
 	date: string;
 	time: string;
+	patient_name?: string; // We'll add this as an optional property
 	patients: { name: string };
 }
 
@@ -57,10 +57,10 @@ export default function SchedulePage() {
 		} else {
 			console.log('Fetched appointments:', data);
 			setAppointments(
-				data?.map((app) => ({
-					...app,
-					patient_name: app.patients.name || 'Unknown',
-				})) || []
+			  (data as Appointment[])?.map((app) => ({
+			    ...app,
+			    patient_name: app.patients.name || 'Unknown',
+			  })) || []
 			);
 		}
 	};
