@@ -27,12 +27,14 @@ export default function SchedulePage() {
   const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null)
   const [newTime, setNewTime] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     fetchAppointments()
   }, [date])
 
   const fetchAppointments = async () => {
+    setIsLoading(true)
     const { data, error } = await supabase
       .from('appointments')
       .select(`
@@ -47,12 +49,14 @@ export default function SchedulePage() {
 
     if (error) {
       console.error('Error fetching appointments:', error)
+      alert('Failed to fetch appointments. Please try again.')
     } else {
       setAppointments((data as Appointment[] || []).map(app => ({
         ...app,
         patient_name: app.patients[0]?.name || 'Unknown'
       })))
     }
+    setIsLoading(false)
   }
 
   const handleEditAppointment = (appointment: Appointment) => {
@@ -148,38 +152,42 @@ export default function SchedulePage() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="divide-y divide-gray-200">
-              {timeSlots.map((time, index) => {
-                const [slotHour, slotAmPm] = time.split(' ')
-                const slotHourNum = parseInt(slotHour, 10) + (slotAmPm === 'PM' && slotHour !== '12' ? 12 : 0)
-                
-                const appointmentsAtTime = appointments.filter(app => {
-                  const appHour = getAppointmentHour(app.time)
-                  return appHour === slotHourNum
-                })
+            {isLoading ? (
+              <div className="text-center py-4">Loading appointments...</div>
+            ) : (
+              <div className="divide-y divide-gray-200">
+                {timeSlots.map((time, index) => {
+                  const [slotHour, slotAmPm] = time.split(' ')
+                  const slotHourNum = parseInt(slotHour, 10) + (slotAmPm === 'PM' && slotHour !== '12' ? 12 : 0)
+                  
+                  const appointmentsAtTime = appointments.filter(app => {
+                    const appHour = getAppointmentHour(app.time)
+                    return appHour === slotHourNum
+                  })
 
-                return (
-                  <div key={time} className={`flex items-center p-4 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                    <div className="w-24 font-medium text-gray-600">{time}</div>
-                    <div className="flex-1 ml-4 space-y-2">
-                      {appointmentsAtTime.map(app => (
-                        <div key={app.id} className="bg-blue-100 p-3 rounded-lg shadow text-blue-800 border border-blue-200 flex justify-between items-center">
-                          <span className="font-semibold">{app.patient_name} - {formatAppointmentTime(app.time)}</span>
-                          <div>
-                            <Button variant="ghost" size="sm" onClick={() => handleEditAppointment(app)}>
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm" onClick={() => handleDeleteAppointment(app.id)}>
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                  return (
+                    <div key={time} className={`flex items-center p-4 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                      <div className="w-24 font-medium text-gray-600">{time}</div>
+                      <div className="flex-1 ml-4 space-y-2">
+                        {appointmentsAtTime.map(app => (
+                          <div key={app.id} className="bg-blue-100 p-3 rounded-lg shadow text-blue-800 border border-blue-200 flex justify-between items-center">
+                            <span className="font-semibold">{app.patient_name} - {formatAppointmentTime(app.time)}</span>
+                            <div>
+                              <Button variant="ghost" size="sm" onClick={() => handleEditAppointment(app)}>
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="sm" onClick={() => handleDeleteAppointment(app.id)}>
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
-            </div>
+                  )
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
