@@ -5,7 +5,15 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Calendar, FileText, PlusCircle, UserPlus, Clock, Home } from 'lucide-react';
+import {
+	Calendar,
+	FileText,
+	PlusCircle,
+	UserPlus,
+	Clock,
+	Home,
+	FileSignature,
+} from 'lucide-react';
 import PatientSelection from '@/components/PatientSelection';
 import { usePatient } from '@/contexts/PatientContext';
 import AddPatientModal from '@/components/AddPatientModal';
@@ -20,6 +28,7 @@ const Navigation = () => {
 		{ href: '/schedule', label: 'Appointments', icon: Clock },
 		{ href: '/patients', label: 'Patients', icon: FileText },
 		{ href: '/rx', label: 'Rx', icon: PlusCircle },
+		{ href: '/notes', label: 'Notes', icon: FileSignature },
 	];
 
 	const handlePatientAdded = (newPatient: { id: string; name: string }) => {
@@ -30,7 +39,10 @@ const Navigation = () => {
 	return (
 		<nav className="flex flex-col w-64 bg-gray-100 p-4">
 			<Link href="/">
-				<Button variant="ghost" className="w-full justify-start mb-8">
+				<Button
+					variant="ghost"
+					className="w-full justify-start mb-8"
+				>
 					<Home className="mr-2 h-6 w-6" />
 					Home
 				</Button>
