@@ -57,8 +57,12 @@ export default function SchedulePage() {
 		} else {
 			console.log('Fetched appointments:', data);
 			setAppointments(
-			  (data as Appointment[])?.map((app) => ({
-			    ...app,
+			  (data as any[])?.map((app) => ({
+			    id: app.id,
+			    patient_id: app.patient_id,
+			    date: app.date,
+			    time: app.time,
+			    patients: app.patients,
 			    patient_name: app.patients.name || 'Unknown',
 			  })) || []
 			);
